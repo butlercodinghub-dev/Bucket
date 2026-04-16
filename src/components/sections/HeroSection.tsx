@@ -7,7 +7,6 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import ParallaxStarfield from "@/components/parallax/ParallaxStarfield";
 import ParallaxClouds from "@/components/parallax/ParallaxClouds";
-import GlowText from "@/components/ui/GlowText";
 import heroStill from "@/assets/images/character-anchor.jpg";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -18,7 +17,6 @@ export default function HeroSection() {
   const video1Ref = useRef<HTMLVideoElement>(null);
   const video2Ref = useRef<HTMLVideoElement>(null);
   const stillRef = useRef<HTMLDivElement>(null);
-  const titleRef = useRef<HTMLDivElement>(null);
   const scrollIndicatorRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -65,20 +63,14 @@ export default function HeroSection() {
     v1.addEventListener("timeupdate", onV1TimeUpdate);
     v2.addEventListener("ended", onV2End);
 
-    // Entrance: fade in video 1, then title
+    // Entrance: fade in video 1
     const tl = gsap.timeline({ delay: 0.3 });
     tl.to(v1, { opacity: 1, duration: 1.2, ease: "power2.out" })
-      .fromTo(
-        titleRef.current,
-        { opacity: 0, y: 40 },
-        { opacity: 1, y: 0, duration: 1, ease: "back.out(1.4)" },
-        "-=0.4"
-      )
       .fromTo(
         scrollIndicatorRef.current,
         { opacity: 0 },
         { opacity: 1, duration: 0.6 },
-        "-=0.3"
+        "-=0.4"
       );
 
     return () => {
@@ -104,12 +96,6 @@ export default function HeroSection() {
         y: "-15%",
         scale: 1.08,
         scrollTrigger: trigger,
-      });
-
-      gsap.to(titleRef.current, {
-        y: "-25%",
-        opacity: 0,
-        scrollTrigger: { ...trigger, end: "40% top" },
       });
 
       gsap.to(scrollIndicatorRef.current, {
@@ -169,24 +155,6 @@ export default function HeroSection() {
             className="object-cover"
           />
         </div>
-      </div>
-
-      {/* Layer 3: Title + Tagline */}
-      <div
-        ref={titleRef}
-        className="absolute inset-0 flex flex-col items-center justify-center opacity-0"
-        style={{ zIndex: 3 }}
-      >
-        <GlowText
-          as="h1"
-          color="purple"
-          className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl 4k:text-9xl font-extrabold tracking-tight font-[family-name:var(--font-space-grotesk)] cloud-text block"
-        >
-          BUCKET THE KID
-        </GlowText>
-        <p className="mt-4 text-lg sm:text-xl text-bucket-lavender/70 tracking-wide font-[family-name:var(--font-space-grotesk)]">
-          Press play, kick back, and stay awhile.
-        </p>
       </div>
 
       {/* Subtle vignette overlay */}
