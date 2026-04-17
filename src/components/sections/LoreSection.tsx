@@ -58,7 +58,7 @@ export default function LoreSection() {
           ScrollTrigger.create({
             trigger: sectionRef.current!,
             start: "top top",
-            end: `+=${loreChapters.length * 100}%`,
+            end: `+=${(loreChapters.length - 1) * 100}%`,
             pin: pinnedRef.current!,
             scrub: 1,
             animation: tl,
@@ -74,7 +74,7 @@ export default function LoreSection() {
       ref={sectionRef}
       id="lore"
       className="relative bg-bucket-void"
-      style={{ minHeight: `${loreChapters.length * 100}vh` }}
+      style={{ minHeight: `${(loreChapters.length - 1) * 100}vh` }}
     >
       {/* Pinned container (desktop) / flowing (mobile) */}
       <div
