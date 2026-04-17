@@ -13,7 +13,10 @@ gsap.registerPlugin(ScrollTrigger);
 
 export default function HeroSection() {
   const sectionRef = useRef<HTMLElement>(null);
-  const videoContainerRef = useRef<HTMLDivElement>(null);
+  // Clip container — never moves, just clips overflow
+  const clipRef = useRef<HTMLDivElement>(null);
+  // Parallax layer — oversized, GSAP moves this
+  const parallaxRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const stillRef = useRef<HTMLDivElement>(null);
   const scrollIndicatorRef = useRef<HTMLDivElement>(null);
@@ -34,13 +37,12 @@ export default function HeroSection() {
 
     // Entrance: fade in video
     const tl = gsap.timeline({ delay: 0.3 });
-    tl.to(video, { opacity: 1, duration: 1.2, ease: "power2.out" })
-      .fromTo(
-        scrollIndicatorRef.current,
-        { opacity: 0 },
-        { opacity: 1, duration: 0.6 },
-        "-=0.4"
-      );
+    tl.to(video, { opacity: 1, duration: 1.2, ease: "power2.out" }).fromTo(
+      scrollIndicatorRef.current,
+      { opacity: 0 },
+      { opacity: 1, duration: 0.6 },
+      "-=0.4"
+    );
 
     return () => {
       video.removeEventListener("ended", onVideoEnd);
@@ -54,10 +56,10 @@ export default function HeroSection() {
     setIsMuted(video.muted);
   };
 
-  // Scroll parallax
+  // Scroll parallax — applied to oversized inner layer only
   useGSAP(
     () => {
-      if (!sectionRef.current || !videoContainerRef.current) return;
+      if (!sectionRef.current || !parallaxRef.current) return;
 
       const trigger = {
         trigger: sectionRef.current,
@@ -66,9 +68,9 @@ export default function HeroSection() {
         scrub: 1,
       };
 
-      gsap.to(videoContainerRef.current, {
-        y: "-15%",
-        scale: 1.08,
+      // Move the oversized parallax layer — clip container holds boundaries
+      gsap.to(parallaxRef.current, {
+        y: "-12%",
         scrollTrigger: trigger,
       });
 
@@ -93,45 +95,69 @@ export default function HeroSection() {
         <ParallaxStarfield />
       </div>
 
-      {/* Layer 2: Video + still image container */}
+      {/* Layer 2: Clip container — fixed to section bounds */}
       <div
-        ref={videoContainerRef}
+        ref={clipRef}
         className="absolute inset-0 overflow-hidden"
         style={{ zIndex: 1 }}
       >
-        {/* Hero video — starts muted for autoplay, user can unmute */}
-        <video
-          ref={videoRef}
-          src="/video/hero-main.mp4"
-          autoPlay
-          muted
-          playsInline
-          preload="auto"
-          className="opacity-0"
+        {/* Parallax inner layer — extends 20% beyond in all directions
+            so scroll movement never reveals a gap */}
+        <div
+          ref={parallaxRef}
           style={{
             position: "absolute",
-            inset: 0,
-            width: "100%",
-            height: "100%",
-            objectFit: "cover",
-            objectPosition: "center center",
+            top: "-20%",
+            left: "-5%",
+            right: "-5%",
+            bottom: "-20%",
           }}
-        />
-
-        {/* Final static hero image — fades in when video ends */}
-        <div ref={stillRef} className="absolute inset-0 opacity-0">
-          <Image
-            src={heroStill}
-            alt="Bucket The Kid"
-            fill
-            priority
-            sizes="100vw"
-            className="object-cover"
+        >
+          {/* Hero video */}
+          <video
+            ref={videoRef}
+            src="/video/hero-main.mp4"
+            autoPlay
+            muted
+            playsInline
+            preload="auto"
+            className="opacity-0"
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              objectPosition: "center center",
+            }}
           />
+
+          {/* Static hero image — fades in when video ends */}
+          <div
+            ref={stillRef}
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              opacity: 0,
+            }}
+          >
+            <Image
+              src={heroStill}
+              alt="Bucket The Kid"
+              fill
+              priority
+              sizes="110vw"
+              className="object-cover object-center"
+            />
+          </div>
         </div>
       </div>
 
-      {/* Subtle vignette overlay */}
+      {/* Vignette overlays */}
       <div
         className="absolute inset-0 bg-gradient-to-b from-bucket-void/30 via-transparent to-bucket-void/60"
         style={{ zIndex: 2 }}
@@ -145,16 +171,14 @@ export default function HeroSection() {
       <button
         onClick={toggleMute}
         aria-label={isMuted ? "Unmute video" : "Mute video"}
-        className="absolute bottom-8 right-6 z-10 flex items-center gap-2 px-3 py-2 rounded-full bg-bucket-void/60 border border-bucket-lavender/20 backdrop-blur-sm text-bucket-lavender/70 hover:text-bucket-neon-pink hover:border-bucket-neon-pink/40 transition-all duration-300"
+        className="absolute bottom-8 right-6 flex items-center gap-2 px-3 py-2 rounded-full bg-bucket-void/60 border border-bucket-lavender/20 backdrop-blur-sm text-bucket-lavender/70 hover:text-bucket-neon-pink hover:border-bucket-neon-pink/40 transition-all duration-300"
         style={{ zIndex: 4 }}
       >
         {isMuted ? (
-          /* Muted icon */
           <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
             <path d="M16.5 12A4.5 4.5 0 0014 7.97v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51A8.796 8.796 0 0021 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06A8.99 8.99 0 0017.73 18l2 2L21 18.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z" />
           </svg>
         ) : (
-          /* Unmuted icon */
           <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
             <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0014 7.97v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z" />
           </svg>
