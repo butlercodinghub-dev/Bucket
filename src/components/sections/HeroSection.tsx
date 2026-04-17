@@ -96,7 +96,7 @@ export default function HeroSection() {
       {/* Layer 2: Video + still image container */}
       <div
         ref={videoContainerRef}
-        className="absolute inset-0 flex items-center justify-center"
+        className="absolute inset-0"
         style={{ zIndex: 1 }}
       >
         {/* Hero video — starts muted for autoplay, user can unmute */}
@@ -107,7 +107,18 @@ export default function HeroSection() {
           muted
           playsInline
           preload="auto"
-          className="absolute w-full h-full object-cover opacity-0"
+          className="opacity-0"
+          style={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            minWidth: "100%",
+            minHeight: "100%",
+            width: "auto",
+            height: "auto",
+            transform: "translate(-50%, -50%)",
+            objectFit: "cover",
+          }}
         />
 
         {/* Final static hero image — fades in when video ends */}
