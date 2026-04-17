@@ -58,7 +58,7 @@ export default function MusicSection() {
             color="pink"
             className="text-4xl sm:text-5xl md:text-6xl 4k:text-8xl font-extrabold font-[family-name:var(--font-space-grotesk)]"
           >
-            Sound from the Island
+            Sounds from the Bucketverse
           </GlowText>
           <p className="mt-4 text-bucket-lavender/60 max-w-md mx-auto">
             Each track is a chapter. Each beat is a step deeper into the story.
