@@ -25,18 +25,18 @@ export const tracks: Track[] = [
     loreTitle: "The Mermaid's Song",
   },
   {
-    id: "pour-out-the-bottle",
-    title: "Pour Out the Bottle",
-    audioSrc: "/audio/pour-out-the-bottle.m4a",
-    coverSrc: "/covers/pour-out-the-bottle.jpg",
-  },
-  {
     id: "my-mistake",
     title: "My Mistake",
     audioSrc: "/audio/my-mistake.m4a",
     coverSrc: "/covers/my-mistake.jpg",
     loreChapter: "Chapter IV",
     loreTitle: "Washed Up — The Aftermath",
+  },
+  {
+    id: "pour-out-the-bottle",
+    title: "Pour Out the Bottle",
+    audioSrc: "/audio/pour-out-the-bottle.m4a",
+    coverSrc: "/covers/pour-out-the-bottle.jpg",
   },
 ];
 
