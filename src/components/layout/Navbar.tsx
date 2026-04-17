@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import logoImg from "@/assets/images/logo.jpg";
+import logoImg from "@/assets/images/logo-hat.png";
 
 const navLinks = [
   { label: "Music", href: "#music" },
@@ -37,12 +37,12 @@ export default function Navbar() {
         <div className="max-w-6xl mx-auto flex items-center justify-between px-4 sm:px-6 py-3">
           {/* Logo */}
           <a href="#" className="flex items-center gap-2">
-            <div className="w-9 h-9 relative rounded-full overflow-hidden">
+            <div className="w-10 h-10 relative">
               <Image
                 src={logoImg}
                 alt="Bucket The Kid"
                 fill
-                className="object-contain"
+                className="object-contain drop-shadow-[0_0_6px_rgba(255,105,180,0.5)]"
               />
             </div>
             <span className="hidden sm:inline text-sm font-bold tracking-wide text-bucket-lavender font-[family-name:var(--font-space-grotesk)]">
