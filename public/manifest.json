@@ -1,0 +1,12 @@
+{
+  "name": "Bucket The Kid",
+  "short_name": "BTK",
+  "description": "Official music page for Bucket The Kid — genre-fluid bedroom producer.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0118",
+  "theme_color": "#0a0118",
+  "icons": [
+    { "src": "/favicon.ico", "sizes": "48x48", "type": "image/x-icon" }
+  ]
+}
