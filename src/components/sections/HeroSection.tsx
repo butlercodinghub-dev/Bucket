@@ -14,58 +14,26 @@ gsap.registerPlugin(ScrollTrigger);
 export default function HeroSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const videoContainerRef = useRef<HTMLDivElement>(null);
-  const video1Ref = useRef<HTMLVideoElement>(null);
-  const video2Ref = useRef<HTMLVideoElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
   const stillRef = useRef<HTMLDivElement>(null);
   const scrollIndicatorRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const v1 = video1Ref.current;
-    const v2 = video2Ref.current;
+    const video = videoRef.current;
     const still = stillRef.current;
-    if (!v1 || !v2 || !still) return;
+    if (!video || !still) return;
 
-    // Pre-buffer video 2: play muted briefly then pause at frame 0
-    // so the first frame is decoded and ready for instant display
-    v2.load();
-    let v2Ready = false;
-    const onV2CanPlay = () => {
-      v2Ready = true;
-    };
-    v2.addEventListener("canplaythrough", onV2CanPlay);
-
-    // Start crossfade 0.4s BEFORE video 1 ends to eliminate the gap
-    const OVERLAP = 0.4;
-    let crossfadeStarted = false;
-
-    const onV1TimeUpdate = () => {
-      if (crossfadeStarted) return;
-      const remaining = v1.duration - v1.currentTime;
-      if (remaining <= OVERLAP && v2Ready) {
-        crossfadeStarted = true;
-
-        // Start v2 immediately so it's rendering frames during the fade
-        v2.currentTime = 0;
-        v2.play();
-
-        // Crossfade both simultaneously
-        gsap.to(v1, { opacity: 0, duration: OVERLAP, ease: "none" });
-        gsap.to(v2, { opacity: 1, duration: OVERLAP, ease: "none" });
-      }
+    // Fade to static image when video ends
+    const onVideoEnd = () => {
+      gsap.to(video, { opacity: 0, duration: 1.5, ease: "power2.inOut" });
+      gsap.to(still, { opacity: 1, duration: 1.5, ease: "power2.inOut" });
     };
 
-    // Video 2 ends -> crossfade to static hero image
-    const onV2End = () => {
-      gsap.to(v2, { opacity: 0, duration: 1.2, ease: "power2.inOut" });
-      gsap.to(still, { opacity: 1, duration: 1.2, ease: "power2.inOut" });
-    };
+    video.addEventListener("ended", onVideoEnd);
 
-    v1.addEventListener("timeupdate", onV1TimeUpdate);
-    v2.addEventListener("ended", onV2End);
-
-    // Entrance: fade in video 1
+    // Entrance: fade in video
     const tl = gsap.timeline({ delay: 0.3 });
-    tl.to(v1, { opacity: 1, duration: 1.2, ease: "power2.out" })
+    tl.to(video, { opacity: 1, duration: 1.2, ease: "power2.out" })
       .fromTo(
         scrollIndicatorRef.current,
         { opacity: 0 },
@@ -74,9 +42,7 @@ export default function HeroSection() {
       );
 
     return () => {
-      v1.removeEventListener("timeupdate", onV1TimeUpdate);
-      v2.removeEventListener("canplaythrough", onV2CanPlay);
-      v2.removeEventListener("ended", onV2End);
+      video.removeEventListener("ended", onVideoEnd);
     };
   }, []);
 
@@ -125,26 +91,17 @@ export default function HeroSection() {
         className="absolute inset-0 flex items-center justify-center"
         style={{ zIndex: 1 }}
       >
-        {/* Video Part 1 */}
+        {/* Single hero video with sound */}
         <video
-          ref={video1Ref}
-          src="/video/hero-entrance.mp4"
+          ref={videoRef}
+          src="/video/hero-main.mp4"
           autoPlay
-          muted
           playsInline
           preload="auto"
           className="absolute w-full h-full object-cover opacity-0"
         />
-        {/* Video Part 2 */}
-        <video
-          ref={video2Ref}
-          src="/video/hero-entrance-pt2.mp4"
-          muted
-          playsInline
-          preload="auto"
-          className="absolute w-full h-full object-cover opacity-0"
-        />
-        {/* Final static hero image */}
+
+        {/* Final static hero image — fades in when video ends */}
         <div ref={stillRef} className="absolute inset-0 opacity-0">
           <Image
             src={heroStill}
