@@ -37,7 +37,7 @@ export default function Navbar() {
         <div className="max-w-6xl mx-auto flex items-center justify-between px-4 sm:px-6 py-3">
           {/* Logo */}
           <a href="#" className="flex items-center gap-2">
-            <div className="w-10 h-10 relative">
+            <div className="w-10 h-10 relative rounded-full overflow-hidden">
               <Image
                 src={logoImg}
                 alt="Bucket The Kid"
