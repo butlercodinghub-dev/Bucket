@@ -96,7 +96,7 @@ export default function HeroSection() {
       {/* Layer 2: Video + still image container */}
       <div
         ref={videoContainerRef}
-        className="absolute inset-0"
+        className="absolute inset-0 overflow-hidden"
         style={{ zIndex: 1 }}
       >
         {/* Hero video — starts muted for autoplay, user can unmute */}
@@ -110,14 +110,11 @@ export default function HeroSection() {
           className="opacity-0"
           style={{
             position: "absolute",
-            top: "50%",
-            left: "50%",
-            minWidth: "100%",
-            minHeight: "100%",
-            width: "auto",
-            height: "auto",
-            transform: "translate(-50%, -50%)",
+            inset: 0,
+            width: "100%",
+            height: "100%",
             objectFit: "cover",
+            objectPosition: "center center",
           }}
         />
 
