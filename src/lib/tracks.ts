@@ -41,10 +41,8 @@ export const tracks: Track[] = [
 ];
 
 export const socialLinks = {
-  spotify:
-    "https://open.spotify.com/artist/5MkblgFYqw5F91W1cMcSiK?si=kWYBApOjRAGjXpqzOt-dkA",
+  spotify: "https://open.spotify.com/artist/5MkblgFYqw5F91W1cMcSiK",
   tiktok: "https://www.tiktok.com/@bucketthekid",
-  instagram: "https://www.instagram.com/bucketthekid/?hl=en",
-  youtube:
-    "https://youtube.com/channel/UCUPjxlk-XRp4TgWk4lhzERw?si=9zF0aBA_2k7AB1Dj",
+  instagram: "https://www.instagram.com/bucketthekid/",
+  youtube: "https://youtube.com/channel/UCUPjxlk-XRp4TgWk4lhzERw",
 };
