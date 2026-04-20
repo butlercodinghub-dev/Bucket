@@ -9,6 +9,14 @@ export interface Track {
 
 export const tracks: Track[] = [
   {
+    id: "let-me-out",
+    title: "Let Me Out",
+    audioSrc: "/audio/let-me-out.m4a",
+    coverSrc: "/covers/let-me-out.jpg",
+    loreChapter: "Chapter I",
+    loreTitle: "The Hat in the Dust",
+  },
+  {
     id: "mango-fruit-girl",
     title: "Mango Fruit Girl",
     audioSrc: "/audio/mango-fruit-girl.m4a",

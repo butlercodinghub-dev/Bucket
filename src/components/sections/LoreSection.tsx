@@ -11,6 +11,7 @@ import { tracks } from "@/lib/tracks";
 import GlowText from "@/components/ui/GlowText";
 import SparkleEffect from "@/components/ui/SparkleEffect";
 import logoImg from "@/assets/images/logo-hat.png";
+import chapterOneImg from "@/assets/images/chapter-1-garage.jpg";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -84,7 +85,19 @@ export default function LoreSection() {
             key={chapter.id}
             className={`lore-chapter absolute inset-0 flex items-center justify-center px-12 ${chapter.bgClass} opacity-0`}
           >
-            <div className="max-w-3xl mx-auto text-center">
+            {/* Chapter scene image background */}
+            {chapter.imageSrc && (
+              <div className="absolute inset-0">
+                <Image
+                  src={chapter.id === "chapter-1" ? chapterOneImg : chapter.imageSrc}
+                  alt={chapter.title}
+                  fill
+                  className="object-cover object-center opacity-30"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-bucket-void/80 via-bucket-void/40 to-bucket-void/60" />
+              </div>
+            )}
+            <div className="max-w-3xl mx-auto text-center relative z-10">
               <span className="text-bucket-cyan/60 text-sm tracking-[0.25em] uppercase font-[family-name:var(--font-space-grotesk)]">
                 {chapter.number}
               </span>
@@ -144,9 +157,20 @@ export default function LoreSection() {
         {loreChapters.map((chapter) => (
           <div
             key={`mob-${chapter.id}`}
-            className={`min-h-screen flex items-center justify-center px-6 py-20 ${chapter.bgClass}`}
+            className={`relative min-h-screen flex items-center justify-center px-6 py-20 ${chapter.bgClass}`}
           >
-            <div className="max-w-sm mx-auto text-center">
+            {chapter.imageSrc && (
+              <div className="absolute inset-0">
+                <Image
+                  src={chapter.id === "chapter-1" ? chapterOneImg : chapter.imageSrc}
+                  alt={chapter.title}
+                  fill
+                  className="object-cover object-center opacity-25"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-bucket-void/80 via-bucket-void/40 to-bucket-void/60" />
+              </div>
+            )}
+            <div className="max-w-sm mx-auto text-center relative z-10">
               <span className="text-bucket-cyan/60 text-xs tracking-[0.25em] uppercase font-[family-name:var(--font-space-grotesk)]">
                 {chapter.number}
               </span>

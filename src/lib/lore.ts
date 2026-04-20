@@ -5,6 +5,7 @@ export interface LoreChapter {
   excerpt: string;
   trackId?: string;
   bgClass: string;
+  imageSrc?: string;
 }
 
 export const loreChapters: LoreChapter[] = [
@@ -22,7 +23,9 @@ export const loreChapters: LoreChapter[] = [
     title: "The Hat in the Dust",
     excerpt:
       'It was a Saturday — the kind of lazy, sun-drenched afternoon where nothing happens and everything changes. On a shelf behind a stack of warped vinyl records, half-hidden under a dust cloth that might\'ve been white once — a bucket hat. The moment his fingers touched the fabric, color detonated. Not slowly. Not like a sunrise. Like a drop — like the moment a beat kicks in and the whole track transforms.',
+    trackId: "let-me-out",
     bgClass: "bg-hero-gradient",
+    imageSrc: "/covers/let-me-out.jpg",
   },
   {
     id: "chapter-2",
