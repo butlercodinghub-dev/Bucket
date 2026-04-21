@@ -11,7 +11,6 @@ import { tracks } from "@/lib/tracks";
 import GlowText from "@/components/ui/GlowText";
 import SparkleEffect from "@/components/ui/SparkleEffect";
 import logoImg from "@/assets/images/logo-hat.png";
-import chapterOneImg from "@/assets/images/chapter-1-garage.jpg";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -89,12 +88,12 @@ export default function LoreSection() {
             {chapter.imageSrc && (
               <div className="absolute inset-0">
                 <Image
-                  src={chapter.id === "chapter-1" ? chapterOneImg : chapter.imageSrc}
+                  src={chapter.imageSrc}
                   alt={chapter.title}
                   fill
-                  className="object-cover object-center opacity-30"
+                  className="object-cover object-center opacity-55"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-bucket-void/80 via-bucket-void/40 to-bucket-void/60" />
+                <div className="absolute inset-0 bg-gradient-to-t from-bucket-void/70 via-bucket-void/20 to-bucket-void/50" />
               </div>
             )}
             <div className="max-w-3xl mx-auto text-center relative z-10">
@@ -162,12 +161,12 @@ export default function LoreSection() {
             {chapter.imageSrc && (
               <div className="absolute inset-0">
                 <Image
-                  src={chapter.id === "chapter-1" ? chapterOneImg : chapter.imageSrc}
+                  src={chapter.imageSrc}
                   alt={chapter.title}
                   fill
-                  className="object-cover object-center opacity-25"
+                  className="object-cover object-center opacity-55"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-bucket-void/80 via-bucket-void/40 to-bucket-void/60" />
+                <div className="absolute inset-0 bg-gradient-to-t from-bucket-void/70 via-bucket-void/20 to-bucket-void/50" />
               </div>
             )}
             <div className="max-w-sm mx-auto text-center relative z-10">

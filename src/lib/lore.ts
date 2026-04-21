@@ -26,6 +26,7 @@ export const loreChapters: LoreChapter[] = [
     trackId: "let-me-out",
     bgClass: "bg-hero-gradient",
     imageSrc: "/covers/let-me-out.jpg",
+
   },
   {
     id: "chapter-2",
@@ -35,6 +36,7 @@ export const loreChapters: LoreChapter[] = [
       "Sweet. Ripe. Tropical and heavy in a way that made the air itself feel like it had flavor. ISLAND JUICE & EXOTIC BLENDS, read a hand-painted sign on a bamboo frame. And behind the stand, arranging the fruit with an effortless grace — Her. She had eyes like the ocean. She smiled at him the way a song smiles when it hits the hook — inevitable, magnetic, the kind of thing you replay in your head long after it's over.",
     trackId: "mango-fruit-girl",
     bgClass: "bg-sunset-gradient",
+    imageSrc: "/covers/mango-fruit.jpg",
   },
   {
     id: "chapter-3",
@@ -44,6 +46,7 @@ export const loreChapters: LoreChapter[] = [
       'Her legs shimmered, fused, and became scales — iridescent, pink and purple and blue, catching the moonlight like a thousand tiny mirrors. "Come deeper," she whispered. Her voice was a melody now. Each word carried a tone, wrapping around his thoughts like vines. He was drowning. Drowning in the most beautiful song he\'d ever heard. Then — CLICK. The bucket hat moved. Pull Down Mode.',
     trackId: "pull-me-under",
     bgClass: "bg-ocean-gradient",
+    imageSrc: "/covers/pull-me-under.jpg",
   },
   {
     id: "chapter-3b",
@@ -53,6 +56,7 @@ export const loreChapters: LoreChapter[] = [
       'Bucket lay on the sand, chest heaving, staring at a sky that didn\'t care about what had just happened. The bucket hat sat on his head, back in its normal position. The clouds on its surface swirled slowly — calm now, like a lullaby after a storm. Faintly warm. Almost reassuring. Like a friend putting a hand on your shoulder without saying anything. "I\'m an idiot," Bucket said. The hat pulsed once, gently. It didn\'t disagree, but it didn\'t pile on either.',
     trackId: "my-mistake",
     bgClass: "bg-ocean-gradient",
+    imageSrc: "/covers/my-mistake.jpg",
   },
   {
     id: "chapter-4",
