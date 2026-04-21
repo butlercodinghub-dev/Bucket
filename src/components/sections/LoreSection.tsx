@@ -91,9 +91,9 @@ export default function LoreSection() {
                   src={chapter.imageSrc}
                   alt={chapter.title}
                   fill
-                  className="object-cover object-center opacity-55"
+                  className="object-cover object-center opacity-30"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-bucket-void/70 via-bucket-void/20 to-bucket-void/50" />
+                <div className="absolute inset-0 bg-gradient-to-t from-bucket-void/80 via-bucket-void/40 to-bucket-void/60" />
               </div>
             )}
             <div className="max-w-3xl mx-auto text-center relative z-10">
@@ -164,9 +164,9 @@ export default function LoreSection() {
                   src={chapter.imageSrc}
                   alt={chapter.title}
                   fill
-                  className="object-cover object-center opacity-55"
+                  className="object-cover object-center opacity-30"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-bucket-void/70 via-bucket-void/20 to-bucket-void/50" />
+                <div className="absolute inset-0 bg-gradient-to-t from-bucket-void/80 via-bucket-void/40 to-bucket-void/60" />
               </div>
             )}
             <div className="max-w-sm mx-auto text-center relative z-10">
