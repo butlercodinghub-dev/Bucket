@@ -7,10 +7,19 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { motion } from "framer-motion";
 import GlowText from "@/components/ui/GlowText";
+import NeonButton from "@/components/ui/NeonButton";
 import SparkleEffect from "@/components/ui/SparkleEffect";
+import { platforms } from "@/lib/platforms";
 import characterImg from "@/assets/images/character-anchor.jpg";
 
 gsap.registerPlugin(ScrollTrigger);
+
+const reveal = (delay = 0) => ({
+  initial: { opacity: 0, y: 30 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true },
+  transition: { duration: 0.8, delay },
+});
 
 export default function AboutSection() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -42,7 +51,7 @@ export default function AboutSection() {
     <section
       ref={sectionRef}
       id="about"
-      className="relative py-24 sm:py-32 4k:py-48 px-4 sm:px-6 lg:px-8 4k:px-16 bg-hero-gradient overflow-hidden"
+      className="relative py-24 sm:py-32 4k:py-48 px-4 sm:px-6 lg:px-8 4k:px-16 bg-gradient-to-b from-[#4c1d95] via-bucket-abyss to-bucket-void overflow-hidden"
     >
       <SparkleEffect count={25} />
 
@@ -55,7 +64,7 @@ export default function AboutSection() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-            className="relative aspect-square max-w-md mx-auto md:mx-0"
+            className="relative aspect-square w-full max-w-md mx-auto md:mx-0"
           >
             <Image
               src={characterImg}
@@ -67,14 +76,9 @@ export default function AboutSection() {
             <div className="absolute inset-0 rounded-3xl glow-box-purple" />
           </motion.div>
 
-          {/* Bio Text */}
+          {/* Bio + links */}
           <div className="space-y-6">
-            <motion.div
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
-            >
+            <motion.div {...reveal()}>
               <p className="text-bucket-cyan text-sm tracking-[0.3em] uppercase mb-4 font-[family-name:var(--font-space-grotesk)]">
                 About
               </p>
@@ -88,57 +92,37 @@ export default function AboutSection() {
             </motion.div>
 
             <motion.p
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: 0.1 }}
-              className="text-bucket-lavender/80 leading-relaxed"
+              {...reveal(0.1)}
+              className="text-bucket-lavender/80 leading-relaxed text-lg"
             >
-              Bucket The Kid feels less like a traditional act and more like the
-              friend who always controls the aux — and somehow never misses. A
-              progressive DJ and bedroom producer by trade, Bucket approaches
-              music with a playful curiosity, treating genres less like lanes
-              and more like open roads.
+              Bucket The Kid is the friend who always controls the aux — and
+              somehow never misses. A progressive DJ and bedroom producer, he
+              treats genres like open roads: hip-hop, electronic, indie,
+              laid-back grooves. If the vibe fits, it rides.
             </motion.p>
 
-            <motion.p
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="text-bucket-lavender/80 leading-relaxed"
-            >
-              His sound moves freely across influences, guided more by feeling
-              than by category. Hip-hop, electronic, indie, laid-back grooves —
-              if the vibe fits, it rides. There&apos;s an easygoing charm in the way
-              he creates — unpretentious, curious, and welcoming.
-            </motion.p>
-
-            <motion.p
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: 0.3 }}
-              className="text-bucket-lavender/80 leading-relaxed"
-            >
-              Operating from the DIY world of bedroom production while thinking
-              like a progressive DJ, Bucket The Kid blends experimentation with
-              instinct, building tracks that feel spontaneous but intentional.
-            </motion.p>
-
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: 0.4 }}
-            >
+            <motion.div {...reveal(0.2)}>
               <GlowText
                 as="p"
                 color="pink"
-                className="text-xl sm:text-2xl font-bold font-[family-name:var(--font-space-grotesk)] mt-4 block"
+                className="text-xl sm:text-2xl font-bold font-[family-name:var(--font-space-grotesk)] block"
               >
                 Press play, kick back, and stay awhile.
               </GlowText>
+            </motion.div>
+
+            <motion.div {...reveal(0.3)} className="pt-2">
+              <p className="text-bucket-lavender/50 text-xs tracking-[0.3em] uppercase mb-4 font-[family-name:var(--font-space-grotesk)]">
+                Listen &amp; follow
+              </p>
+              <div className="flex flex-wrap gap-3">
+                {platforms.map((p) => (
+                  <NeonButton key={p.name} href={p.href} color={p.color} className="px-5 py-2.5">
+                    {p.icon}
+                    {p.name}
+                  </NeonButton>
+                ))}
+              </div>
             </motion.div>
           </div>
         </div>

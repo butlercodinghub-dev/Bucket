@@ -128,18 +128,6 @@ body {
   background: linear-gradient(180deg, #0a0118 0%, #1a0a3e 30%, #2d1066 60%, #4c1d95 100%);
 }
 
-.bg-island-gradient {
-  background: linear-gradient(180deg, #4c1d95 0%, #831843 40%, #9d174d 70%, #1a0a3e 100%);
-}
-
-.bg-ocean-gradient {
-  background: linear-gradient(180deg, #1a0a3e 0%, #0c4a6e 50%, #164e63 100%);
-}
-
-.bg-sunset-gradient {
-  background: linear-gradient(180deg, #1a0a3e 0%, #4c1d95 30%, #831843 60%, #F97316 100%);
-}
-
 /* === Glow Box Shadow Utilities === */
 .glow-box-pink {
   box-shadow: 0 0 30px rgba(236, 72, 153, 0.3), 0 0 60px rgba(236, 72, 153, 0.1);

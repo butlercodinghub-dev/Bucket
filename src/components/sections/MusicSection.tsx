@@ -1,55 +1,45 @@
 "use client";
 
 import { useRef } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useGSAP } from "@gsap/react";
+import { motion } from "framer-motion";
 import TrackCard from "@/components/audio/TrackCard";
+import FeaturedCarousel, { ArrowButton } from "@/components/audio/FeaturedCarousel";
 import GlowText from "@/components/ui/GlowText";
 import { tracks } from "@/lib/tracks";
 
-gsap.registerPlugin(ScrollTrigger);
+const reveal = {
+  initial: { opacity: 0, y: 40 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true, margin: "-80px" },
+  transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] as const },
+};
 
 export default function MusicSection() {
-  const sectionRef = useRef<HTMLElement>(null);
-  const headingRef = useRef<HTMLDivElement>(null);
+  const rowRef = useRef<HTMLDivElement>(null);
 
-  useGSAP(
-    () => {
-      if (!headingRef.current) return;
-
-      gsap.fromTo(
-        headingRef.current,
-        { opacity: 0, y: 60 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 1,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: headingRef.current,
-            start: "top 85%",
-            toggleActions: "play none none none",
-          },
-        }
-      );
-    },
-    { scope: sectionRef }
-  );
+  const scrollRow = (dir: 1 | -1) => {
+    const row = rowRef.current;
+    if (!row) return;
+    const card = row.firstElementChild as HTMLElement | null;
+    const step = card ? card.offsetWidth + 16 : row.clientWidth * 0.8;
+    row.scrollBy({ left: dir * step, behavior: "smooth" });
+  };
 
   return (
     <section
-      ref={sectionRef}
       id="music"
-      className="relative py-24 sm:py-32 4k:py-48 px-4 sm:px-6 lg:px-8 4k:px-16 bg-island-gradient"
+      className="relative py-24 sm:py-32 4k:py-48 px-4 sm:px-6 lg:px-8 4k:px-16 bg-hero-gradient overflow-hidden"
     >
       {/* Ambient glow orbs */}
-      <div className="absolute top-[20%] left-[10%] w-[300px] h-[300px] rounded-full bg-bucket-purple/10 blur-[100px] animate-pulse-glow pointer-events-none" />
-      <div className="absolute bottom-[30%] right-[5%] w-[400px] h-[400px] rounded-full bg-bucket-pink/8 blur-[120px] animate-pulse-glow pointer-events-none" style={{ animationDelay: "1.5s" }} />
+      <div className="absolute top-[15%] left-[10%] w-[300px] h-[300px] rounded-full bg-bucket-purple/10 blur-[100px] animate-pulse-glow pointer-events-none" />
+      <div
+        className="absolute bottom-[20%] right-[5%] w-[400px] h-[400px] rounded-full bg-bucket-pink/10 blur-[120px] animate-pulse-glow pointer-events-none"
+        style={{ animationDelay: "1.5s" }}
+      />
 
-      <div className="max-w-6xl 4k:max-w-[1800px] mx-auto">
+      <div className="relative max-w-6xl 4k:max-w-[1800px] mx-auto">
         {/* Heading */}
-        <div ref={headingRef} className="text-center mb-16 sm:mb-20 opacity-0">
+        <motion.div {...reveal} className="text-center mb-12 sm:mb-16">
           <p className="text-bucket-cyan text-sm tracking-[0.3em] uppercase mb-4 font-[family-name:var(--font-space-grotesk)]">
             The Music
           </p>
@@ -58,19 +48,38 @@ export default function MusicSection() {
             color="pink"
             className="text-4xl sm:text-5xl md:text-6xl 4k:text-8xl font-extrabold font-[family-name:var(--font-space-grotesk)]"
           >
-            Sounds from the Bucketverse
+            New Releases
           </GlowText>
-          <p className="mt-4 text-bucket-lavender/60 max-w-md mx-auto">
-            Each track is a chapter. Each beat is a step deeper into the story.
-          </p>
-        </div>
+        </motion.div>
 
-        {/* Track Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8 max-w-4xl mx-auto">
-          {tracks.map((track, i) => (
-            <TrackCard key={track.id} track={track} index={i} />
-          ))}
-        </div>
+        {/* Featured coverflow */}
+        <motion.div {...reveal}>
+          <FeaturedCarousel />
+        </motion.div>
+
+        {/* All songs row */}
+        <motion.div {...reveal} className="mt-20 sm:mt-24">
+          <div className="flex items-center justify-between mb-6">
+            <h3 className="text-xl sm:text-2xl font-bold text-white font-[family-name:var(--font-space-grotesk)]">
+              All Songs
+            </h3>
+            <div className="flex gap-3">
+              <ArrowButton direction="prev" onClick={() => scrollRow(-1)} />
+              <ArrowButton direction="next" onClick={() => scrollRow(1)} />
+            </div>
+          </div>
+
+          <div
+            ref={rowRef}
+            className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4 -mx-4 px-4 sm:mx-0 sm:px-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          >
+            {tracks.map((track) => (
+              <div key={track.id} className="snap-start shrink-0 w-[42vw] sm:w-[200px] 4k:w-[300px]">
+                <TrackCard track={track} />
+              </div>
+            ))}
+          </div>
+        </motion.div>
       </div>
     </section>
   );

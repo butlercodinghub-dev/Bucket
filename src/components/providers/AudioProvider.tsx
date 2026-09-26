@@ -45,50 +45,64 @@ export default function AudioProvider({
   const howlRef = useRef<Howl | null>(null);
   const rafRef = useRef<number>(0);
 
-  const updateProgress = useCallback(() => {
-    if (howlRef.current && howlRef.current.playing()) {
-      setProgress(howlRef.current.seek() as number);
-      rafRef.current = requestAnimationFrame(updateProgress);
-    }
+  const startProgressLoop = useCallback(() => {
+    const tick = () => {
+      if (howlRef.current && howlRef.current.playing()) {
+        setProgress(howlRef.current.seek() as number);
+        rafRef.current = requestAnimationFrame(tick);
+      }
+    };
+    rafRef.current = requestAnimationFrame(tick);
   }, []);
 
   const play = useCallback(
-    (trackId: string) => {
+    function playTrack(trackId: string) {
       const track = tracks.find((t) => t.id === trackId);
       if (!track) return;
 
-      if (howlRef.current) {
-        howlRef.current.fade(1, 0, 400);
-        setTimeout(() => {
-          howlRef.current?.unload();
-        }, 400);
+      // Capture the outgoing howl: by the time the timeout fires,
+      // howlRef.current already points at the new track.
+      const outgoing = howlRef.current;
+      if (outgoing) {
+        outgoing.fade(outgoing.volume(), 0, 400);
+        setTimeout(() => outgoing.unload(), 400);
       }
 
       cancelAnimationFrame(rafRef.current);
+
+      // Ignore events from a howl that has since been replaced (e.g. the
+      // outgoing track firing "stop" when it unloads after a switch).
+      const isCurrent = () => howlRef.current === howl;
 
       const howl = new Howl({
         src: [track.audioSrc],
         html5: true,
         volume: 0,
         onplay: () => {
+          if (!isCurrent()) return;
           setIsPlaying(true);
           setDuration(howl.duration());
           howl.fade(0, 1, 500);
-          rafRef.current = requestAnimationFrame(updateProgress);
+          startProgressLoop();
         },
         onend: () => {
+          if (!isCurrent()) return;
           setIsPlaying(false);
           setProgress(0);
+          // Auto-advance to the next track in the list
+          const idx = tracks.findIndex((t) => t.id === track.id);
+          playTrack(tracks[(idx + 1) % tracks.length].id);
         },
         onpause: () => {
-          setIsPlaying(false);
+          if (isCurrent()) setIsPlaying(false);
         },
         onstop: () => {
+          if (!isCurrent()) return;
           setIsPlaying(false);
           setProgress(0);
         },
         onload: () => {
-          setDuration(howl.duration());
+          if (isCurrent()) setDuration(howl.duration());
         },
       });
 
@@ -96,7 +110,7 @@ export default function AudioProvider({
       setCurrentTrack(track);
       howl.play();
     },
-    [updateProgress]
+    [startProgressLoop]
   );
 
   const pause = useCallback(() => {
