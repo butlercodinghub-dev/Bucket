@@ -1,11 +1,9 @@
 "use client";
 
-import { useRef } from "react";
 import { motion } from "framer-motion";
-import TrackCard from "@/components/audio/TrackCard";
-import FeaturedCarousel, { ArrowButton } from "@/components/audio/FeaturedCarousel";
+import ReleaseCard from "@/components/audio/ReleaseCard";
 import GlowText from "@/components/ui/GlowText";
-import { tracks } from "@/lib/tracks";
+import { newReleases } from "@/lib/tracks";
 
 const reveal = {
   initial: { opacity: 0, y: 40 },
@@ -15,16 +13,6 @@ const reveal = {
 };
 
 export default function MusicSection() {
-  const rowRef = useRef<HTMLDivElement>(null);
-
-  const scrollRow = (dir: 1 | -1) => {
-    const row = rowRef.current;
-    if (!row) return;
-    const card = row.firstElementChild as HTMLElement | null;
-    const step = card ? card.offsetWidth + 16 : row.clientWidth * 0.8;
-    row.scrollBy({ left: dir * step, behavior: "smooth" });
-  };
-
   return (
     <section
       id="music"
@@ -41,7 +29,7 @@ export default function MusicSection() {
         {/* Heading */}
         <motion.div {...reveal} className="text-center mb-12 sm:mb-16">
           <p className="text-bucket-cyan text-sm tracking-[0.3em] uppercase mb-4 font-[family-name:var(--font-space-grotesk)]">
-            The Music
+            Out now
           </p>
           <GlowText
             as="h2"
@@ -52,34 +40,22 @@ export default function MusicSection() {
           </GlowText>
         </motion.div>
 
-        {/* Featured coverflow */}
-        <motion.div {...reveal}>
-          <FeaturedCarousel />
-        </motion.div>
-
-        {/* All songs row */}
-        <motion.div {...reveal} className="mt-20 sm:mt-24">
-          <div className="flex items-center justify-between mb-6">
-            <h3 className="text-xl sm:text-2xl font-bold text-white font-[family-name:var(--font-space-grotesk)]">
-              All Songs
-            </h3>
-            <div className="flex gap-3">
-              <ArrowButton direction="prev" onClick={() => scrollRow(-1)} />
-              <ArrowButton direction="next" onClick={() => scrollRow(1)} />
-            </div>
-          </div>
-
-          <div
-            ref={rowRef}
-            className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4 -mx-4 px-4 sm:mx-0 sm:px-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-          >
-            {tracks.map((track) => (
-              <div key={track.id} className="snap-start shrink-0 w-[42vw] sm:w-[200px] 4k:w-[300px]">
-                <TrackCard track={track} />
-              </div>
-            ))}
-          </div>
-        </motion.div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-12 sm:gap-10 lg:gap-16 max-w-4xl 4k:max-w-6xl mx-auto">
+          {newReleases.map((track, i) => (
+            <motion.div
+              key={track.id}
+              {...reveal}
+              transition={{ ...reveal.transition, delay: i * 0.15 }}
+            >
+              <ReleaseCard
+                track={track}
+                layout="stacked"
+                priority={i === 0}
+                sizes="(max-width: 640px) 90vw, 440px"
+              />
+            </motion.div>
+          ))}
+        </div>
       </div>
     </section>
   );

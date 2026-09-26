@@ -9,6 +9,7 @@ import { motion } from "framer-motion";
 import ParallaxStarfield from "@/components/parallax/ParallaxStarfield";
 import ParallaxClouds from "@/components/parallax/ParallaxClouds";
 import GlowText from "@/components/ui/GlowText";
+import NeonGlyphs from "@/components/ui/NeonGlyphs";
 import { useAudio } from "@/components/providers/AudioProvider";
 import { latestTrack } from "@/lib/tracks";
 import heroStill from "@/assets/images/character-anchor.jpg";
@@ -126,6 +127,11 @@ export default function HeroSection() {
           className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-bucket-void/70 to-transparent"
           style={{ zIndex: 2 }}
         />
+
+        {/* Floating neon glyphs */}
+        <div className="absolute inset-0" style={{ zIndex: 3 }}>
+          <NeonGlyphs />
+        </div>
 
         {/* Artist text */}
         <div
