@@ -5,11 +5,29 @@ export interface Track {
   coverSrc: string;
   /** ISO date (YYYY-MM-DD). Controls "latest release" and list order. */
   releaseDate: string;
+  /** Featured in the New Releases section */
+  newRelease?: boolean;
 }
 
 // TODO: placeholder release dates — replace with the real ones.
-// Order is newest first; My Mistake is the current latest release.
+// Feeling Rich is the current latest release.
 export const tracks: Track[] = [
+  {
+    id: "feeling-rich",
+    title: "Feeling Rich",
+    audioSrc: "/audio/feeling-rich.m4a",
+    coverSrc: "/covers/feeling-rich.jpg",
+    releaseDate: "2026-09-26",
+    newRelease: true,
+  },
+  {
+    id: "this-feeling",
+    title: "This Feeling",
+    audioSrc: "/audio/this-feeling.m4a",
+    coverSrc: "/covers/this-feeling.jpg",
+    releaseDate: "2026-09-21",
+    newRelease: true,
+  },
   {
     id: "my-mistake",
     title: "My Mistake",
@@ -48,6 +66,8 @@ export const tracks: Track[] = [
 ].sort((a, b) => b.releaseDate.localeCompare(a.releaseDate));
 
 export const latestTrack = tracks[0];
+
+export const newReleases = tracks.filter((t) => t.newRelease);
 
 export const socialLinks = {
   spotify: "https://open.spotify.com/artist/5MkblgFYqw5F91W1cMcSiK",

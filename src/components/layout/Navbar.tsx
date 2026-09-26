@@ -7,7 +7,8 @@ import logoImg from "@/assets/images/logo-hat.png";
 
 const navLinks = [
   { label: "Home", id: "home" },
-  { label: "Music", id: "music" },
+  { label: "New", id: "music" },
+  { label: "Songs", id: "songs" },
   { label: "About", id: "about" },
 ];
 
