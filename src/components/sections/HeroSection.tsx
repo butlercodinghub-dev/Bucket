@@ -1,20 +1,18 @@
 "use client";
 
-import { useRef, useEffect } from "react";
 import Image from "next/image";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useGSAP } from "@gsap/react";
-import { motion } from "framer-motion";
-import ParallaxStarfield from "@/components/parallax/ParallaxStarfield";
-import ParallaxClouds from "@/components/parallax/ParallaxClouds";
-import GlowText from "@/components/ui/GlowText";
+import {
+  motion,
+  useMotionTemplate,
+  useMotionValue,
+  useReducedMotion,
+  useSpring,
+  useTransform,
+} from "framer-motion";
 import NeonGlyphs from "@/components/ui/NeonGlyphs";
 import { useAudio } from "@/components/providers/AudioProvider";
 import { latestTrack } from "@/lib/tracks";
-import heroStill from "@/assets/images/character-anchor.jpg";
-
-gsap.registerPlugin(ScrollTrigger);
+import heroArt from "@/assets/images/hero-21x9.jpg";
 
 const fadeUp = (delay: number) => ({
   initial: { opacity: 0, y: 30 },
@@ -22,127 +20,116 @@ const fadeUp = (delay: number) => ({
   transition: { duration: 0.9, delay, ease: [0.16, 1, 0.3, 1] as const },
 });
 
+const spring = { stiffness: 80, damping: 20, mass: 0.6 };
+
 export default function HeroSection() {
-  const sectionRef = useRef<HTMLElement>(null);
-  // Parallax layer — oversized, GSAP moves this
-  const parallaxRef = useRef<HTMLDivElement>(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const stillRef = useRef<HTMLDivElement>(null);
   const { currentTrack, isPlaying, togglePlay } = useAudio();
   const isLatestPlaying = currentTrack?.id === latestTrack.id && isPlaying;
+  const reduceMotion = useReducedMotion();
 
-  useEffect(() => {
-    const video = videoRef.current;
-    const still = stillRef.current;
-    if (!video || !still) return;
+  // Pointer position across the hero, -0.5 … 0.5 (0 = centre)
+  const px = useMotionValue(0);
+  const py = useMotionValue(0);
+  const sx = useSpring(px, spring);
+  const sy = useSpring(py, spring);
 
-    // Fade to static image when video ends
-    const onVideoEnd = () => {
-      gsap.to(video, { opacity: 0, duration: 1.5, ease: "power2.inOut" });
-      gsap.to(still, { opacity: 1, duration: 1.5, ease: "power2.inOut" });
-    };
+  // Artwork drifts against the cursor and tilts slightly — depth without motion when idle
+  const artX = useTransform(sx, (v) => v * -26);
+  const artY = useTransform(sy, (v) => v * -14);
+  const rotateY = useTransform(sx, (v) => v * 4);
+  const rotateX = useTransform(sy, (v) => v * -3);
 
-    video.addEventListener("ended", onVideoEnd);
-    gsap.to(video, { opacity: 1, duration: 1.2, delay: 0.3, ease: "power2.out" });
+  // Glyphs sit "in front", so they move with the cursor and further
+  const glyphX = useTransform(sx, (v) => v * 50);
+  const glyphY = useTransform(sy, (v) => v * 30);
 
-    return () => {
-      video.removeEventListener("ended", onVideoEnd);
-    };
-  }, []);
+  // Soft light that follows the cursor
+  const glowX = useTransform(sx, (v) => `${(v + 0.5) * 100}%`);
+  const glowY = useTransform(sy, (v) => `${(v + 0.5) * 100}%`);
+  const glow = useMotionTemplate`radial-gradient(420px circle at ${glowX} ${glowY}, rgba(244,114,182,0.28), rgba(103,232,249,0.12) 40%, transparent 70%)`;
 
-  // Scroll parallax — applied to oversized inner layer only
-  useGSAP(
-    () => {
-      if (!sectionRef.current || !parallaxRef.current) return;
+  const onPointerMove = (e: React.PointerEvent<HTMLElement>) => {
+    if (reduceMotion || e.pointerType !== "mouse") return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    px.set((e.clientX - rect.left) / rect.width - 0.5);
+    py.set((e.clientY - rect.top) / rect.height - 0.5);
+  };
 
-      gsap.to(parallaxRef.current, {
-        y: "-12%",
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top top",
-          end: "bottom top",
-          scrub: 1,
-        },
-      });
-    },
-    { scope: sectionRef }
-  );
+  const onPointerLeave = () => {
+    px.set(0);
+    py.set(0);
+  };
 
   return (
     <section
-      ref={sectionRef}
       id="home"
-      className="relative w-full h-[100svh] md:p-4 bg-bucket-void"
+      onPointerMove={onPointerMove}
+      onPointerLeave={onPointerLeave}
+      className="relative w-full bg-bucket-void lg:px-4 lg:pt-4"
     >
-      {/* Rounded hero card */}
-      <div className="relative w-full h-full overflow-hidden md:rounded-3xl md:border md:border-white/5">
-        {/* Starfield */}
-        <div className="absolute inset-0">
-          <ParallaxStarfield />
-        </div>
+      {/* 21:9 card on wide screens; full-height crop on tablets and phones */}
+      <div
+        className="relative w-full h-[100svh] lg:h-auto lg:aspect-[21/9] lg:min-h-[560px] lg:max-h-[calc(100svh-2rem)] overflow-hidden lg:rounded-3xl lg:border lg:border-white/5"
+        style={{ perspective: 1200 }}
+      >
+        {/* Artwork — oversized so drifting never reveals an edge */}
+        <motion.div
+          className="absolute -inset-[2.5%]"
+          style={{ x: artX, y: artY, rotateX, rotateY }}
+          initial={{ opacity: 0, scale: 1.06 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <Image
+            src={heroArt}
+            alt="Bucket The Kid standing in a neon flower field under his name written in the clouds"
+            fill
+            priority
+            placeholder="blur"
+            sizes="100vw"
+            className="object-cover object-[50%_15%]"
+          />
+        </motion.div>
 
-        {/* Media layer — clipped by the card */}
-        <div className="absolute inset-0 overflow-hidden" style={{ zIndex: 1 }}>
-          {/* Parallax inner layer — extends beyond the card so scroll
-              movement never reveals a gap */}
-          <div
-            ref={parallaxRef}
-            className="absolute"
-            style={{ top: "-20%", left: "-5%", right: "-5%", bottom: "-20%" }}
-          >
-            <video
-              ref={videoRef}
-              src="/video/hero-main.mp4"
-              autoPlay
-              muted
-              playsInline
-              preload="auto"
-              className="absolute inset-0 w-full h-full object-cover object-center opacity-0"
-            />
+        {/* Cursor light */}
+        <motion.div
+          className="absolute inset-0 pointer-events-none mix-blend-screen hidden lg:block"
+          style={{ backgroundImage: glow, zIndex: 2 }}
+        />
 
-            {/* Static hero image — fades in when video ends */}
-            <div ref={stillRef} className="absolute inset-0 opacity-0">
-              <Image
-                src={heroStill}
-                alt="Bucket The Kid"
-                fill
-                priority
-                sizes="110vw"
-                className="object-cover object-center"
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* Readability overlays: left-side fade for the text, bottom fade into the page */}
+        {/* Readability overlays: left fade for the text, top fade for the nav */}
         <div
-          className="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-bucket-void/95 from-15% via-bucket-void/75 via-45% to-transparent to-75%"
+          className="absolute inset-0 bg-gradient-to-t lg:bg-gradient-to-r from-bucket-void/90 from-5% via-bucket-void/45 via-25% to-transparent to-50% lg:to-40%"
           style={{ zIndex: 2 }}
         />
         <div
-          className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-bucket-void/70 to-transparent"
-          style={{ zIndex: 2 }}
-        />
-        <div
-          className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-bucket-void/70 to-transparent"
+          className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-bucket-void/60 to-transparent"
           style={{ zIndex: 2 }}
         />
 
         {/* Floating neon glyphs */}
-        <div className="absolute inset-0" style={{ zIndex: 3 }}>
+        <motion.div className="absolute inset-0" style={{ x: glyphX, y: glyphY, zIndex: 3 }}>
           <NeonGlyphs />
-        </div>
+        </motion.div>
 
-        {/* Artist text */}
+        {/* Artist text — the name itself is painted into the artwork */}
         <div
-          className="absolute inset-0 flex items-end md:items-center px-6 pb-24 md:pb-0 sm:px-10 lg:px-20 4k:px-32"
+          className="absolute inset-0 flex items-end lg:items-center px-6 pb-20 lg:pb-0 lg:pt-16 sm:px-10 lg:px-16 4k:px-32"
           style={{ zIndex: 4 }}
         >
-          <div className="max-w-xl 4k:max-w-3xl">
+          <div className="max-w-sm 4k:max-w-xl">
+            {/* Visible on narrow screens, where the crop cuts off the painted name */}
+            <motion.h1
+              {...fadeUp(0.45)}
+              className="lg:sr-only mb-4 text-5xl sm:text-6xl font-bold leading-[0.95] tracking-tight text-white font-[family-name:var(--font-space-grotesk)] drop-shadow-[0_2px_12px_rgba(10,1,24,0.8)]"
+            >
+              Bucket <span className="block text-bucket-sky-light glow-cyan">The Kid</span>
+            </motion.h1>
+
             {/* Waveform glyph */}
             <motion.svg
-              {...fadeUp(0.6)}
-              className="w-12 h-6 mb-6 text-bucket-neon-pink drop-shadow-[0_0_6px_var(--color-bucket-neon-pink)]"
+              {...fadeUp(0.5)}
+              className="w-12 h-6 mb-5 text-bucket-neon-pink drop-shadow-[0_0_6px_var(--color-bucket-neon-pink)]"
               viewBox="0 0 48 24"
               fill="none"
               stroke="currentColor"
@@ -154,33 +141,28 @@ export default function HeroSection() {
               <path d="M2 12 L8 4 L14 20 L20 4 L26 20 L32 4 L38 20 L46 12" />
             </motion.svg>
 
-            <motion.h1
-              {...fadeUp(0.7)}
-              className="font-[family-name:var(--font-space-grotesk)] font-bold leading-[0.95] tracking-tight text-6xl sm:text-7xl lg:text-8xl 4k:text-[10rem]"
-            >
-              <span className="block text-white">Bucket</span>
-              <GlowText as="span" color="cyan" className="block text-bucket-sky-light">
-                The Kid
-              </GlowText>
-            </motion.h1>
-
             <motion.p
-              {...fadeUp(0.85)}
-              className="mt-5 text-sm sm:text-base tracking-[0.35em] uppercase text-bucket-lavender font-[family-name:var(--font-space-grotesk)]"
+              {...fadeUp(0.6)}
+              className="text-sm sm:text-base tracking-[0.35em] uppercase text-bucket-lavender font-[family-name:var(--font-space-grotesk)]"
             >
               New Era DJ
             </motion.p>
 
             <motion.a
-              {...fadeUp(1)}
+              {...fadeUp(0.75)}
               href="#music"
-              className="mt-8 inline-block text-white text-base sm:text-lg tracking-wide uppercase font-[family-name:var(--font-space-grotesk)]"
+              className="mt-6 block text-white font-[family-name:var(--font-space-grotesk)]"
             >
-              Available now · {latestTrack.title}
-              <span className="mt-1 block h-[3px] rounded-full bg-bucket-pink shadow-[0_0_10px_var(--color-bucket-pink)]" />
+              <span className="block text-xs tracking-[0.3em] uppercase text-bucket-lavender/70">
+                Available now
+              </span>
+              <span className="mt-1 inline-block text-3xl sm:text-4xl lg:text-5xl 4k:text-7xl font-bold leading-tight">
+                {latestTrack.title}
+                <span className="mt-2 block h-[3px] rounded-full bg-bucket-pink shadow-[0_0_10px_var(--color-bucket-pink)]" />
+              </span>
             </motion.a>
 
-            <motion.div {...fadeUp(1.15)} className="mt-8">
+            <motion.div {...fadeUp(0.9)} className="mt-8">
               <button
                 type="button"
                 onClick={() => togglePlay(latestTrack.id)}
@@ -201,9 +183,6 @@ export default function HeroSection() {
             </motion.div>
           </div>
         </div>
-
-        {/* Rising clouds */}
-        <ParallaxClouds triggerRef={sectionRef} />
       </div>
     </section>
   );

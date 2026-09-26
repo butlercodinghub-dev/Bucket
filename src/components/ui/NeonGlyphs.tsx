@@ -30,14 +30,14 @@ interface Glyph {
 
 // Kept to the edges and away from the centre, where the character sits
 const glyphs: Glyph[] = [
-  { shape: "wave", color: "cyan", className: "top-[11%] left-[24%] w-16", rotate: -8, delay: 0.9 },
-  { shape: "spark", color: "lavender", className: "top-[16%] right-[7%] w-7", rotate: 0, delay: 1.1 },
-  { shape: "zigzag", color: "cyan", className: "top-[46%] right-[4%] w-16", rotate: 12, delay: 1.3 },
-  { shape: "squiggle", color: "coral", className: "bottom-[24%] right-[14%] w-16", rotate: -10, delay: 1.5 },
-  { shape: "peaks", color: "purple", className: "bottom-[10%] left-[8%] w-12", rotate: 6, delay: 1.7 },
-  { shape: "wave", color: "coral", className: "bottom-[20%] left-[30%] w-12 hidden md:block", rotate: 14, delay: 1.4 },
-  { shape: "spark", color: "cyan", className: "bottom-[12%] right-[40%] w-5 hidden md:block", rotate: 20, delay: 1.2 },
-  { shape: "zigzag", color: "lavender", className: "top-[64%] right-[30%] w-12 hidden lg:block", rotate: -14, delay: 1.6 },
+  { shape: "wave", color: "cyan", className: "top-[16%] right-[20%] w-16", rotate: -8, delay: 0.9 },
+  { shape: "spark", color: "lavender", className: "top-[14%] right-[7%] w-7", rotate: 0, delay: 1.1 },
+  { shape: "zigzag", color: "cyan", className: "top-[48%] right-[4%] w-16", rotate: 12, delay: 1.3 },
+  { shape: "squiggle", color: "coral", className: "bottom-[22%] right-[18%] w-16", rotate: -10, delay: 1.5 },
+  { shape: "peaks", color: "purple", className: "bottom-[8%] left-[6%] w-12 hidden lg:block", rotate: 6, delay: 1.7 },
+  { shape: "wave", color: "coral", className: "bottom-[14%] left-[26%] w-12 hidden lg:block", rotate: 14, delay: 1.4 },
+  { shape: "spark", color: "cyan", className: "bottom-[10%] right-[38%] w-5 hidden md:block", rotate: 20, delay: 1.2 },
+  { shape: "zigzag", color: "lavender", className: "top-[62%] right-[28%] w-12 hidden lg:block", rotate: -14, delay: 1.6 },
 ];
 
 export default function NeonGlyphs() {
