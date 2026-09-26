@@ -20,15 +20,17 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://bucketthekid.com"),
 
   title: {
-    default: "Bucket The Kid | Press Play, Kick Back, Stay Awhile",
+    default: "Bucket The Kid — New Era DJ",
     template: "%s | Bucket The Kid",
   },
   description:
-    "Bucket The Kid — progressive DJ and bedroom producer. Genre-fluid music that feels lived-in rather than manufactured. Hip-hop, electronic, indie, laid-back grooves — if the vibe fits, it rides.",
+    "Bucket The Kid — New Era DJ and bedroom producer. Hear the latest releases: genre-fluid hip-hop, electronic, indie and laid-back grooves. If the vibe fits, it rides.",
 
   keywords: [
     "Bucket The Kid",
     "BucketTheKid",
+    "New Era DJ",
+    "Let Me Out",
     "bucket the kid music",
     "bedroom producer",
     "indie hip hop",
@@ -47,9 +49,9 @@ export const metadata: Metadata = {
     type: "website",
     url: "https://bucketthekid.com",
     siteName: "Bucket The Kid",
-    title: "Bucket The Kid | Press Play, Kick Back, Stay Awhile",
+    title: "Bucket The Kid — New Era DJ",
     description:
-      "Genre-fluid music that feels lived-in rather than manufactured. Press play, kick back, and stay awhile.",
+      "New Era DJ. Hear the latest releases from Bucket The Kid — press play, kick back, and stay awhile.",
     images: [
       {
         url: "/og-image.jpg",
@@ -64,9 +66,9 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     site: "@bucketthekid",
     creator: "@bucketthekid",
-    title: "Bucket The Kid | Press Play, Kick Back, Stay Awhile",
+    title: "Bucket The Kid — New Era DJ",
     description:
-      "Genre-fluid music that feels lived-in rather than manufactured. Press play, kick back, and stay awhile.",
+      "New Era DJ. Hear the latest releases from Bucket The Kid — press play, kick back, and stay awhile.",
     images: ["/og-image.jpg"],
   },
 
@@ -100,7 +102,7 @@ const jsonLd = {
   url: "https://bucketthekid.com",
   image: "https://bucketthekid.com/og-image.jpg",
   description:
-    "Bucket The Kid — progressive DJ and bedroom producer. Genre-fluid music that feels lived-in rather than manufactured.",
+    "Bucket The Kid — New Era DJ and bedroom producer. Genre-fluid music that feels lived-in rather than manufactured.",
   genre: ["Hip-Hop", "Electronic", "Indie", "Lo-fi"],
   sameAs: [
     "https://open.spotify.com/artist/5MkblgFYqw5F91W1cMcSiK",
